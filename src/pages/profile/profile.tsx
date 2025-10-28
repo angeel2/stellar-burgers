@@ -22,11 +22,13 @@ export const Profile: FC = () => {
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    setFormValue((prevState) => ({
-      ...prevState,
-      name: user?.name || '',
-      email: user?.email || ''
-    }));
+    if (user) {
+      setFormValue({
+        name: user.name,
+        email: user.email,
+        password: ''
+      });
+    }
   }, [user]);
 
   const isFormChanged =
@@ -47,20 +49,26 @@ export const Profile: FC = () => {
             password: formValue.password || undefined
           })
         ).unwrap();
+
         setFormValue((prev) => ({ ...prev, password: '' }));
-      } catch (err: any) {
-        setError(err.message || 'Ошибка обновления профиля');
+      } catch (err: unknown) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Ошибка обновления профиля';
+        setError(errorMessage);
       }
     }
   };
 
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
-    setFormValue({
-      name: user?.name || '',
-      email: user?.email || '',
-      password: ''
-    });
+
+    if (user) {
+      setFormValue({
+        name: user.name,
+        email: user.email,
+        password: ''
+      });
+    }
     setError('');
   };
 
@@ -82,6 +90,7 @@ export const Profile: FC = () => {
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}
+      updateUserError={error}
     />
   );
 };

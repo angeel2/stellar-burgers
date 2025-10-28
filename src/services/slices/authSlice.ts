@@ -10,6 +10,10 @@ import {
 } from '../../utils/burger-api';
 import { TUser } from '@utils-types';
 
+type TAuthError = {
+  message: string;
+};
+
 interface AuthState {
   user: TUser | null;
   isAuth: boolean;
@@ -33,7 +37,8 @@ export const loginUser = createAsyncThunk(
       document.cookie = `accessToken=${response.accessToken}`;
       return response.user;
     } catch (error) {
-      return rejectWithValue(error);
+      const authError = error as TAuthError;
+      return rejectWithValue(authError.message || 'Ошибка авторизации');
     }
   }
 );
@@ -47,7 +52,8 @@ export const registerUser = createAsyncThunk(
       document.cookie = `accessToken=${response.accessToken}`;
       return response.user;
     } catch (error) {
-      return rejectWithValue(error);
+      const authError = error as TAuthError;
+      return rejectWithValue(authError.message || 'Ошибка регистрации');
     }
   }
 );
@@ -59,7 +65,10 @@ export const getUser = createAsyncThunk(
       const response = await getUserApi();
       return response.user;
     } catch (error) {
-      return rejectWithValue(error);
+      const authError = error as TAuthError;
+      return rejectWithValue(
+        authError.message || 'Ошибка получения пользователя'
+      );
     }
   }
 );
@@ -71,7 +80,10 @@ export const updateUser = createAsyncThunk(
       const response = await updateUserApi(data);
       return response.user;
     } catch (error) {
-      return rejectWithValue(error);
+      const authError = error as TAuthError;
+      return rejectWithValue(
+        authError.message || 'Ошибка обновления пользователя'
+      );
     }
   }
 );
@@ -86,7 +98,8 @@ export const logoutUser = createAsyncThunk(
         'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       return null;
     } catch (error) {
-      return rejectWithValue(error);
+      const authError = error as TAuthError;
+      return rejectWithValue(authError.message || 'Ошибка выхода');
     }
   }
 );
@@ -115,7 +128,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка авторизации';
+        state.error = (action.payload as string) || 'Ошибка авторизации';
       })
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
@@ -128,7 +141,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка регистрации';
+        state.error = (action.payload as string) || 'Ошибка регистрации';
       })
       .addCase(getUser.pending, (state) => {
         state.isLoading = true;
@@ -142,6 +155,19 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuth = false;
         state.user = null;
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = (action.payload as string) || 'Ошибка обновления профиля';
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;

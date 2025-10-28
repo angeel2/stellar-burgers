@@ -89,7 +89,7 @@ module.exports = {
     compress: true,
     historyApiFallback: true,
     port: 4000,
-    open: true, // ← добавляем эту строку
-    hot: true 
+    open: true,
+    hot: true
   }
 };

@@ -6,6 +6,10 @@ import {
 } from '../../utils/burger-api';
 import { TOrder } from '@utils-types';
 
+type TOrderError = {
+  message: string;
+};
+
 interface OrderState {
   orders: TOrder[];
   feedOrders: TOrder[];
@@ -33,7 +37,10 @@ export const fetchFeedOrders = createAsyncThunk(
       const response = await getFeedsApi();
       return response;
     } catch (error) {
-      return rejectWithValue(error);
+      const orderError = error as TOrderError;
+      return rejectWithValue(
+        orderError.message || 'Ошибка загрузки ленты заказов'
+      );
     }
   }
 );
@@ -45,7 +52,10 @@ export const fetchUserOrders = createAsyncThunk(
       const orders = await getOrdersApi();
       return orders;
     } catch (error) {
-      return rejectWithValue(error);
+      const orderError = error as TOrderError;
+      return rejectWithValue(
+        orderError.message || 'Ошибка загрузки истории заказов'
+      );
     }
   }
 );
@@ -57,7 +67,8 @@ export const createOrder = createAsyncThunk(
       const response = await orderBurgerApi(ingredients);
       return response.order;
     } catch (error) {
-      return rejectWithValue(error);
+      const orderError = error as TOrderError;
+      return rejectWithValue(orderError.message || 'Ошибка создания заказа');
     }
   }
 );
@@ -101,7 +112,8 @@ const orderSlice = createSlice({
       })
       .addCase(fetchFeedOrders.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка загрузки ленты заказов';
+        state.error =
+          (action.payload as string) || 'Ошибка загрузки ленты заказов';
       })
       .addCase(fetchUserOrders.pending, (state) => {
         state.isLoading = true;
@@ -113,7 +125,8 @@ const orderSlice = createSlice({
       })
       .addCase(fetchUserOrders.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка загрузки истории заказов';
+        state.error =
+          (action.payload as string) || 'Ошибка загрузки истории заказов';
       })
       .addCase(createOrder.pending, (state) => {
         state.isLoading = true;
@@ -126,7 +139,7 @@ const orderSlice = createSlice({
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка создания заказа';
+        state.error = (action.payload as string) || 'Ошибка создания заказа';
       });
   }
 });

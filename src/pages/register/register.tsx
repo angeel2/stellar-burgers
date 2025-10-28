@@ -24,8 +24,10 @@ export const Register: FC = () => {
         registerUser({ name: userName, email, password })
       ).unwrap();
       navigate('/');
-    } catch (err: any) {
-      setError(err.message || 'Ошибка регистрации');
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Ошибка регистрации';
+      setError(errorMessage);
     }
   };
 

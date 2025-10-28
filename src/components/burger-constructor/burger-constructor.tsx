@@ -1,4 +1,4 @@
-import { FC, useMemo, useEffect } from 'react';
+import { FC, useMemo } from 'react';
 import { TConstructorIngredient, TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
@@ -23,14 +23,6 @@ export const BurgerConstructor: FC = () => {
   const orderRequest = useSelector(getOrdersLoading);
   const orderModalData = useSelector(getCurrentOrder);
 
-  const maxIngredientsCount = 6;
-
-  useEffect(() => {
-    if (orderModalData) {
-      dispatch(clearConstructor());
-    }
-  }, [orderModalData, dispatch]);
-
   const createNewOrder = () => {
     if (!isAuth) {
       navigate('/login', { state: { from: location } });
@@ -48,6 +40,9 @@ export const BurgerConstructor: FC = () => {
   };
 
   const closeOrderModal = () => {
+    if (orderModalData) {
+      dispatch(clearConstructor());
+    }
     dispatch(clearCurrentOrder());
   };
 
@@ -61,11 +56,22 @@ export const BurgerConstructor: FC = () => {
     [constructorItems]
   );
 
+  const constructorItemsForUI = useMemo(
+    () => ({
+      ...constructorItems,
+      ingredients: constructorItems.ingredients.map((ingredient, index) => ({
+        ...ingredient,
+        id: `${ingredient._id}-${index}`
+      }))
+    }),
+    [constructorItems]
+  );
+
   return (
     <BurgerConstructorUI
       price={price}
       orderRequest={orderRequest}
-      constructorItems={constructorItems}
+      constructorItems={constructorItemsForUI}
       orderModalData={orderModalData}
       onOrderClick={createNewOrder}
       closeOrderModal={closeOrderModal}

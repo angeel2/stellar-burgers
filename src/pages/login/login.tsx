@@ -6,8 +6,8 @@ import { loginUser, getAuthLoading } from '../../services/slices/authSlice';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 export const Login: FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
 
   const dispatch = useDispatch();
@@ -24,8 +24,10 @@ export const Login: FC = () => {
     try {
       await dispatch(loginUser({ email, password })).unwrap();
       navigate(from, { replace: true });
-    } catch (err: any) {
-      setError(err.message || 'Ошибка авторизации');
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Ошибка авторизации';
+      setError(errorMessage);
     }
   };
 
