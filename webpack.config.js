@@ -58,7 +58,6 @@ module.exports = {
   ],
   resolve: {
     extensions: [
-      '*',
       '.js',
       '.jsx',
       '.ts',
@@ -89,6 +88,8 @@ module.exports = {
     static: path.join(__dirname, './dist'),
     compress: true,
     historyApiFallback: true,
-    port: 4000
+    port: 4000,
+    open: true, // ← добавляем эту строку
+    hot: true 
   }
 };

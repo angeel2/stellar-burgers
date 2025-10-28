@@ -1,6 +1,6 @@
 import { TIngredient } from '@utils-types';
 
-export type OrderInfoUIProps = {
+export type TOrderInfoUIProps = {
   orderInfo: TOrderInfo;
 };
 

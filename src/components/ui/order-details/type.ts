@@ -1,3 +1,3 @@
-export type OrderDetailsUIProps = {
+export type TOrderDetailsUIProps = {
   orderNumber: number;
 };

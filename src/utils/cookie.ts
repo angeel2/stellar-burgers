@@ -45,3 +45,7 @@ export function setCookie(
 export function deleteCookie(name: string) {
   setCookie(name, '', { expires: -1 });
 }
+
+export function getAccessToken(): string {
+  return getCookie('accessToken') || '';
+}

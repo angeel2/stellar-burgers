@@ -1,10 +1,13 @@
-export type FeedInfoUIProps = {
-  feed: any;
+export type TFeedInfoUIProps = {
+  feed: {
+    total: number;
+    totalToday: number;
+  };
   readyOrders: number[];
   pendingOrders: number[];
 };
 
-export type HalfColumnProps = {
+export type THalfColumnProps = {
   orders: number[];
   title: string;
   textColor?: string;
