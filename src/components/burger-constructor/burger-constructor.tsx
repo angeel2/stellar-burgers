@@ -11,7 +11,6 @@ import {
   getOrdersLoading,
   clearCurrentOrder
 } from '../../services/slices/orderSlice';
-import { clearConstructor } from '../../services/slices/burgerConstructorSlice';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
@@ -40,9 +39,6 @@ export const BurgerConstructor: FC = () => {
   };
 
   const closeOrderModal = () => {
-    if (orderModalData) {
-      dispatch(clearConstructor());
-    }
     dispatch(clearCurrentOrder());
   };
 

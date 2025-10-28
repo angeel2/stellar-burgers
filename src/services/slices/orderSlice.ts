@@ -5,6 +5,7 @@ import {
   orderBurgerApi
 } from '../../utils/burger-api';
 import { TOrder } from '@utils-types';
+import { clearConstructor } from './burgerConstructorSlice';
 
 type TOrderError = {
   message: string;
@@ -62,9 +63,12 @@ export const fetchUserOrders = createAsyncThunk(
 
 export const createOrder = createAsyncThunk(
   'orders/create',
-  async (ingredients: string[], { rejectWithValue }) => {
+  async (ingredients: string[], { dispatch, rejectWithValue }) => {
     try {
       const response = await orderBurgerApi(ingredients);
+
+      dispatch(clearConstructor());
+
       return response.order;
     } catch (error) {
       const orderError = error as TOrderError;
