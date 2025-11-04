@@ -5,12 +5,12 @@ import {
   CurrencyIcon
 } from '@zlden/react-developer-burger-ui-components';
 import styles from './burger-constructor.module.css';
-import { BurgerConstructorUIProps } from './type';
+import { TBurgerConstructorUIProps } from './type';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorElement, Modal } from '@components';
 import { Preloader, OrderDetailsUI } from '@ui';
 
-export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
+export const BurgerConstructorUI: FC<TBurgerConstructorUIProps> = ({
   constructorItems,
   orderRequest,
   price,
@@ -37,14 +37,15 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
       </div>
     )}
     <ul className={styles.elements}>
-      {constructorItems.ingredients.length > 0 ? (
+      {constructorItems.ingredients &&
+      constructorItems.ingredients.length > 0 ? (
         constructorItems.ingredients.map(
-          (item: TConstructorIngredient, index: number) => (
+          (ingredient: TConstructorIngredient, index: number) => (
             <BurgerConstructorElement
-              ingredient={item}
+              ingredient={ingredient}
               index={index}
               totalItems={constructorItems.ingredients.length}
-              key={item.id}
+              key={ingredient.id}
             />
           )
         )
@@ -84,6 +85,9 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         size='large'
         children='Оформить заказ'
         onClick={onOrderClick}
+        disabled={
+          !constructorItems.bun || constructorItems.ingredients.length === 0
+        }
       />
     </div>
 

@@ -1,5 +1,5 @@
 import { TOrder } from '@utils-types';
 
-export type OrdersListProps = {
+export type TOrdersListProps = {
   orders: TOrder[];
 };

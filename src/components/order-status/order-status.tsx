@@ -1,25 +1,25 @@
 import React, { FC } from 'react';
-import { OrderStatusProps } from './type';
+import { TOrderStatusProps } from './type';
 import { OrderStatusUI } from '@ui';
 
-const statusText: { [key: string]: string } = {
+const statusTextMap: { [key: string]: string } = {
   pending: 'Готовится',
   done: 'Выполнен',
   created: 'Создан'
 };
 
-export const OrderStatus: FC<OrderStatusProps> = ({ status }) => {
-  let textStyle = '';
+export const OrderStatus: FC<TOrderStatusProps> = ({ status }) => {
+  let textColor = '';
   switch (status) {
     case 'pending':
-      textStyle = '#E52B1A';
+      textColor = '#E52B1A';
       break;
     case 'done':
-      textStyle = '#00CCCC';
+      textColor = '#00CCCC';
       break;
     default:
-      textStyle = '#F2F2F3';
+      textColor = '#F2F2F3';
   }
 
-  return <OrderStatusUI textStyle={textStyle} text={statusText[textStyle]} />;
+  return <OrderStatusUI textStyle={textColor} text={statusTextMap[status]} />;
 };

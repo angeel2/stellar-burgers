@@ -1,5 +1,5 @@
 import { TOrder } from '@utils-types';
 
-export type OrdersListUIProps = {
+export type TOrdersListUIProps = {
   orderByDate: TOrder[];
 };
