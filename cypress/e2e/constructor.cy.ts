@@ -64,23 +64,36 @@ describe('Burger Constructor', () => {
   });
 
   describe('Modal windows functionality', () => {
-    it('should open and close ingredient modal', () => {
+    it('should open and close ingredient modal with correct ingredient data', () => {
       cy.get('[data-cy="ingredient-item"]').first().click();
 
       cy.get('[data-cy="modal"]').should('be.visible');
       cy.get('[data-cy="modal-title"]').should('contain', 'Детали ингредиента');
 
+      cy.get('[data-cy="modal"]').within(() => {
+        cy.get('img').should('be.visible');
+        cy.get('h3').should('not.be.empty');
+        cy.contains('Калории').should('be.visible');
+        cy.contains('Белки').should('be.visible');
+        cy.contains('Жиры').should('be.visible');
+        cy.contains('Углеводы').should('be.visible');
+      });
+
       cy.get('[data-cy="modal-close-button"]').click();
       cy.get('[data-cy="modal"]').should('not.exist');
 
-      cy.get('[data-cy="ingredient-item"]').first().click();
+      cy.get('[data-cy="ingredient-item"]').eq(2).click();
       cy.get('[data-cy="modal"]').should('be.visible');
+
+      cy.get('[data-cy="modal"]').within(() => {
+        cy.get('img').should('be.visible');
+        cy.get('h3').should('not.be.empty');
+      });
 
       cy.get('[data-cy="modal-overlay"]').click({ force: true });
       cy.get('[data-cy="modal"]').should('not.exist');
     });
   });
-
   describe('Order creation', () => {
     it('should create order successfully', () => {
       cy.get('[data-cy="ingredient-item"]')
