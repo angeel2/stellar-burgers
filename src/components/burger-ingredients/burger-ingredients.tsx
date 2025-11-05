@@ -9,7 +9,6 @@ import {
   getIngredientsLoading,
   getAllIngredients
 } from '../../services/slices/ingredientsSlice';
-
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import { Preloader } from '../ui/preloader';
